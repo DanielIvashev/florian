@@ -1,0 +1,73 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "ignorePatterns": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/public/**"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:vue/recommended"
+    ],
+    "globals": {},
+    "plugins": [
+        "babel",
+        "vue",
+        "import",
+        "promise"
+    ],
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "@babel/eslint-parser",
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "ecmaFeatures": {
+        },
+        "requireConfigFile": false,
+        "babelOptions": {}
+    },
+    "rules": {
+        "arrow-parens": ["warn", "as-needed"],
+        "comma-dangle": ["warn", "never"],
+        "curly": ["off", "multi-or-nest"],
+        "handle-callback-err": "off",
+        "indent": ["warn", 4, { "SwitchCase": 1 }],
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "no-case-declarations": "warn",
+        "no-debugger": "warn",
+        "no-empty": ["warn", { "allowEmptyCatch": true }],
+        "no-mixed-operators": ["warn"],
+        "no-prototype-builtins": "off",
+        "no-useless-escape": "warn",
+        "no-unused-vars": "warn",
+        "prefer-promise-reject-errors": ["error", { "allowEmptyReject": true }],
+        "semi": ["warn", "always", { "omitLastInOneLineBlock": true }],
+        "space-before-function-paren": ["warn", "always"],
+        "strict": "off",
+        "import/no-named-as-default": "off",
+        "import/no-unresolved": ["error", { "commonjs": true, "amd": true }],
+        "import/no-useless-path-segments": ["warn", { "commonjs": true }],
+        "promise/catch-or-return": "error",
+        "unicorn/prefer-includes": "off",
+        "vue/html-indent": ["warn", 4, { "alignAttributesVertically": true }],
+        "vue/html-self-closing": ["warn", { "html": { "void": "never", "normal": "never" } }],
+        "vue/no-unused-components": ["warn"],
+        "vue/no-v-html": "off",
+        "vue/singleline-html-element-content-newline": ["off", {}]
+    },
+    "settings": {
+        "import/resolver": {
+            "alias": {
+                "map": [
+                    ["@", "./src"]
+                ],
+                "extensions": [".vue", ".js", ".jsx"]
+            }
+        }
+    }
+}

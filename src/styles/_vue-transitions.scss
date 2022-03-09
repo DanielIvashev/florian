@@ -1,0 +1,29 @@
+// animation of changing root pages
+.router-enter-active,
+.router-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.router-enter-from,
+.router-leave-to {
+    opacity: 0;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.35s ease;
+}
+.list-leave-active {
+  display: none;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}

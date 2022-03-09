@@ -1,0 +1,91 @@
+.big-table {
+  &__table {
+    height: 600px;
+    max-width: 100%;
+    :deep(table) {
+      tr th {
+        position: sticky;
+        z-index: 2;
+      }
+
+      thead tr:first-child th {
+        top: 48px;
+        z-index: 3;
+        background: #fff;
+      }
+
+      td:first-child {
+        z-index: 1
+      }
+
+      tr:first-child th:first-child {
+        z-index: 3
+      }
+
+      thead tr:first-child th {
+        top: 0;
+        z-index: 1;
+        font-weight: 600;
+      }
+
+      td:first-child, th:first-child {
+        position: sticky;
+        left: 0;
+        background: #fff;
+      }
+    }
+  }
+  &__sort-icon {
+    opacity: 0;
+    transition: .3s;
+    &.sorted {
+      opacity: 1;
+    }
+    &.sorted-da {
+      transform: rotate(180deg);
+    }
+  }
+  &__td, &__th {
+    text-align: left;
+    position: relative;
+    :deep(.q-checkbox__icon) {
+      color: #da0f19;
+    }
+  }
+  &__t-body {
+    position: relative;
+  }
+  &__th {
+    &.has-sort {
+      cursor: pointer;
+    }
+    &:hover {
+      .big-table__sort-icon {
+        opacity: 1;
+      }
+    }
+  }
+  &__controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+  &__td-image {
+    width: 30px;
+    height: 30px;
+  }
+}
+@media (max-width: $breakpoint-xs-max) {
+  .big-table {
+
+    &__table-top-right {
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    :deep(.q-table__top) {
+      flex-direction: column;
+    }
+  }
+}
+

@@ -1,0 +1,10 @@
+.dashboard {
+  &__title {
+    text-align: center;
+    font-size: 2rem;
+  }
+  &__content {
+    max-width: 1199px;
+    margin: 0 auto;
+  }
+}

@@ -1,9 +1,7 @@
 import { defineConfig } from 'vite';
 import { babel } from '@rollup/plugin-babel';
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
-import { viteSingleFile } from "vite-plugin-singlefile"
 import vue from '@vitejs/plugin-vue';
-
 const path = require('path');
 
 export default defineConfig({
@@ -17,7 +15,6 @@ export default defineConfig({
     vue({
       template: { transformAssetUrls },
     }),
-    viteSingleFile(),
     quasar({
       sassVariables: '@/styles/_quasar-variables.scss',
     }),
@@ -27,15 +24,11 @@ export default defineConfig({
     dark: 'false',
   },
   build: {
-    target: "esnext",
-    assetsInlineLimit: 100000000,
-    chunkSizeWarningLimit: 100000000,
-    cssCodeSplit: false,
-    brotliSize: false,
     rollupOptions: {
-      inlineDynamicImports: true,
       output: {
-        manualChunks: () => "everything.js",
+        manualChunks: {
+          quasar: ['quasar'],
+        },
       },
     },
   },

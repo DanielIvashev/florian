@@ -1,13 +1,10 @@
 <template>
   <div>
-    not found
-    {{ $route }}
-    {{ $router }}
+    coin
   </div>
 </template>
-
 <script>
 export default {
-  name: 'NotFound',
+  name: 'SpecialCoin'
 }
 </script>

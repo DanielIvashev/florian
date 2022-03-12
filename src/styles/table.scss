@@ -1,8 +1,13 @@
-.big-table {
+.table {
   &__table {
     height: 600px;
     max-width: 100%;
-    :deep(table) {
+    overflow-x: hidden;
+      &--small {
+      height: auto;
+      box-shadow: none;
+    }
+
       tr th {
         position: sticky;
         z-index: 2;
@@ -33,7 +38,18 @@
         left: 0;
         background: #fff;
       }
-    }
+  }
+  &__progress {
+    position: sticky;
+    top: 49px;
+    z-index: 3;
+  }
+
+  :deep(.q-item) {
+    color: black;
+  }
+  :deep(.q-item--active) {
+    color: var(--q-primary);
   }
   &__sort-icon {
     opacity: 0;
@@ -75,16 +91,36 @@
     width: 30px;
     height: 30px;
   }
+  &__pagination {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 0;
+  }
+  &__page-link {
+    padding: 3px 10px;
+    background: $primary;
+    color: white;
+    border-radius: 6px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+    text-decoration: none;
+    &:hover {
+      box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
+    }
+  }
 }
 @media (max-width: $breakpoint-xs-max) {
-  .big-table {
-
-    &__table-top-right {
+  .table {
+    &__table {
+      overflow-x: auto;
+    }
+    &__controls {
       flex-direction: column;
       margin-top: 10px;
-    }
-    :deep(.q-table__top) {
-      flex-direction: column;
     }
   }
 }

@@ -4,27 +4,273 @@
       <h1 class="dashboard__title">
         Dashboard
       </h1>
-      <big-table :coins="getCoinsGecko" :loading="getCoinsGeckoLoading" />
+      <q-list style="margin-bottom: 10px">
+        <q-expansion-item
+          v-model="isSmallTableOpen"
+          popup
+          icon="perm_identity"
+          label="Small Table"
+        >
+          <q-card>
+            <q-card-section>
+              <table-small
+                :coins="getCoinsGeckoSmall"
+                :columns="smallTable.columns"
+                :loading="getCoinsGeckoLoading"
+                v-model:liked-row-ids="smallTable.likedRowIds"
+                type="small"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
+      <table-big
+        :coins="getCoinsGecko"
+        :columns="bigTable.columns"
+        :loading="getCoinsGeckoLoading"
+        :time-range="bigTable.timeRange"
+        :rows-per-page="bigTable.rowsPerPage"
+        v-model:current-page="bigTable.currentPage"
+        v-model:liked-row-ids="bigTable.likedRowIds"
+        :max-page="bigTablePagesCount"
+        type="big"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import BigTable from "@/components/BigTable.vue";
+import Table from "@/components/Table.vue";
+import { markRaw } from "vue";
+
+const ALL_COINS_COUNT = 13100;
+
 export default {
   name: 'Dashboard',
   components: {
-    BigTable
+    TableBig: Table,
+    TableSmall: Table
+  },
+  data () {
+    return {
+      isSmallTableOpen: false,
+      bigTable: {
+        columns: markRaw([
+          {
+            name: 'image',
+            label: 'Logo',
+            required: true
+          },
+          {
+            name: 'name',
+            label: 'Name',
+            format: (val) => val,
+            field: (row) => row.name,
+            sortable: {
+              handler: (a, b) => a.name.localeCompare(b.name),
+            }
+          },
+          {
+            name: 'current_price',
+            label: 'Current Price',
+            format: (val) => val,
+            field: (row) => row.current_price,
+            sortable: {
+              handler: (a, b) => a.current_price - b.current_price,
+            }
+          },
+          {
+            name: 'atl',
+            label: 'ATL',
+            format: (val) => val,
+            field: (row) => row.atl,
+            sortable: {
+              handler: (a, b) => a.atl - b.atl,
+            }
+          },
+          {
+            name: 'likes',
+            label: 'Like',
+            format: (val) => val,
+            field: (row) => '',
+            sortable: {
+              handler: (a, b) => {
+                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
+                  return 0;
+                }
+                const hasLike = (this.likedRowIds || []).includes(a.id);
+                return hasLike ? 1 : -1
+              },
+            }
+          },
+          {
+            name: 'pageLink',
+            label: '',
+            required: true
+          },
+        ]),
+        likedRowIds: [],
+        currentPage: 1,
+        rowsPerPage: {
+          value: 25,
+          options: markRaw([
+            {
+              value: 25,
+              label: '25'
+            },
+            {
+              value: 50,
+              label: '50'
+            },
+            {
+              value: 100,
+              label: '100'
+            },
+            {
+              value: 150,
+              label: '150'
+            },
+            {
+              value: 200,
+              label: '200'
+            }
+          ])
+        },
+        timeRange: {
+          value: '24h',
+          options: markRaw([
+            {
+              value: '1h',
+              label: '1 hour'
+            },
+            {
+              value: '24h',
+              label: '24 hours'
+            },
+            {
+              value: '7d',
+              label: '7 days'
+            },
+            {
+              value: '14d',
+              label: '14 days'
+            },
+            {
+              value: '30d',
+              label: '30 days'
+            },
+            {
+              value: '200d',
+              label: '200 days'
+            },
+            {
+              value: '1y',
+              label: '1 year'
+            },
+          ])
+        }
+      },
+      smallTable: {
+        likedRowIds: [],
+        columns: markRaw([
+          {
+            name: 'image',
+            label: 'Logo',
+            required: true
+          },
+          {
+            name: 'name',
+            label: 'Name',
+            format: (val) => val,
+            field: (row) => row.name,
+            sortable: {
+              handler: (a, b) => a.name.localeCompare(b.name),
+            }
+          },
+          {
+            name: 'current_price',
+            label: 'Current Price',
+            format: (val) => val,
+            field: (row) => row.current_price,
+            sortable: {
+              handler: (a, b) => a.current_price - b.current_price,
+            }
+          },
+          {
+            name: 'atl',
+            label: 'ATL',
+            format: (val) => val,
+            field: (row) => row.atl,
+            sortable: {
+              handler: (a, b) => a.atl - b.atl,
+            }
+          },
+          {
+            name: 'likes',
+            label: 'Like',
+            format: (val) => val,
+            field: (row) => '',
+            sortable: {
+              handler: (a, b) => {
+                if (!this.likedRowIds || !this.likedRowIds.length) {
+                  return 0;
+                }
+                const hasLike = (this.likedRowIds || []).includes(a.id);
+                return hasLike ? 1 : -1
+              },
+            }
+          },
+        ]),
+      }
+    }
+  },
+  mounted () {
+    if (this.getCoinsGecko.length && !this.getCoinsGeckoLoading) {
+      this.$store.dispatch('loadCoinsMarket')
+    }
   },
   computed: {
     getCoinsGecko () {
-      return this.$store.getters['getCoinsGecko'];
+      return this.$store.getters['getCoinsGecko'] || [];
+    },
+    getCoinsGeckoSmall () {
+      return (this.$store.getters['getCoinsGecko'] || []).slice(0, 4);
     },
     getCoinsGeckoLoading () {
-      return this.$store.getters['getCoinsGeckoLoading'];
+      return this.$store.getters['getCoinsGeckoLoading'] || false;
     },
     getCoinsGeckoError () {
       return this.$store.getters['getCoinsGeckoError'];
+    },
+    bigTablePagesCount () {
+      return Math.floor(ALL_COINS_COUNT / this.bigTable.rowsPerPage.value);
+    }
+  },
+  watch: {
+    'bigTable.timeRange.value' (val) {
+      this.currentPage = 1;
+      this.loadCoinsMarket();
+    },
+    'bigTable.rowsPerPage.value' (val) {
+      this.loadCoinsMarket();
+    },
+    'bigTable.currentPage' (val) {
+      this.loadCoinsMarket();
+    }
+  },
+  created() {
+    this.loadCoinsMarket();
+  },
+  methods: {
+    loadCoinsMarket () {
+      return this.$store.dispatch('loadCoinsMarket', {
+        params: {
+          ...(!!this.bigTable.timeRange.value && { price_change_percentage: this.bigTable.timeRange.value }),
+          page: this.bigTable.currentPage,
+          per_page: this.bigTable.rowsPerPage.value,
+          price_change_percentage: this.bigTable.timeRange.value
+        }
+      })
     }
   }
 };

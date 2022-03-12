@@ -1,3 +1,5 @@
+import {markRaw} from "vue";
+
 export const rootMutations = {
   TOGGLE_THEME(state) {
     state.isLightTheme = !state.isLightTheme;
@@ -19,10 +21,16 @@ export const rootMutations = {
     state.coinsGeckoLoading = true;
     state.coinsGeckoError = null;
   },
-  SET_COINS_GECKO_SUCCESS(state, { coins }) {
+  SET_COINS_GECKO_SUCCESS(state, { coins, append }) {
     state.coinsGeckoLoading = false;
     state.coinsGeckoError = null;
-    state.coinsGecko = coins;
+    let newCoins = [];
+    if (append) {
+      newCoins = state.coinsGecko.concat(coins)
+    } else {
+      newCoins = coins;
+    }
+    state.coinsGecko = markRaw(newCoins);
   },
   SET_COINS_GECKO_ERROR(state, { error }) {
     state.coinsGeckoLoading = false;
@@ -32,10 +40,10 @@ export const rootMutations = {
     state.coinGeckoLoading = true;
     state.coinGeckoError = null;
   },
-  SET_COIN_GECKO_SUCCESS(state, { coins }) {
+  SET_COIN_GECKO_SUCCESS(state, { coin }) {
     state.coinGeckoLoading = false;
     state.coinGeckoError = null;
-    state.coinGecko = coins;
+    state.coinGecko = coin;
   },
   SET_COIN_GECKO_ERROR(state, { error }) {
     state.coinGeckoLoading = false;

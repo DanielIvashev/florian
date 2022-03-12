@@ -7,9 +7,8 @@ const coinGeckoRepository = RepositoryFactory.get('gecko');
 export const rootActions = {
   initialize({ commit, dispatch }) {
     const setLocale = dispatch('setLocale', { locale: 'en' });
-    const loadCoinsMarket = dispatch('loadCoinsMarket');
 
-    return Promise.allSettled([setLocale, loadCoinsMarket]);
+    return Promise.allSettled([setLocale]);
   },
   async setLocale({ commit, dispatch }, { locale }) {
     if (SUPPORT_LOCALES.includes(locale)) {
@@ -27,10 +26,10 @@ export const rootActions = {
       }
     }
   },
-  loadCoinsMarket({ commit, dispatch }) {
+  loadCoinsMarket({ commit, dispatch }, payload = {}) {
     commit('SET_COINS_GECKO_LOADING');
     return coinGeckoRepository
-      .getCoinsMarkets()
+      .getCoinsMarkets(payload.params)
       .then(({ data, status }) => {
         if (status !== 200 || !data || !data.length) {
           throw new Error();

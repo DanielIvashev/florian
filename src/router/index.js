@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from '@/router/routes';
-import { store } from '@/store';
-import middlewareFactory from './middlewareFactory';
 
 export const router = createRouter({
-  history: createWebHistory(),
   routes,
   scrollBehavior() {
     return new Promise((resolve) => {

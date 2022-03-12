@@ -1,0 +1,1 @@
+import{y as e,C as o}from"./quasar.deea5181.js";import{_ as n}from"./index.2f54e9d8.js";const r={name:"SpecialCoin"};function a(c,t,i,p,s,_){return e(),o("div",null," coin ")}var m=n(r,[["render",a]]);export{m as default};

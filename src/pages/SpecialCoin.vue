@@ -233,18 +233,26 @@ export default {
         },
         currentPage(val) {
             this.loadCoinsMarket();
+        },
+        coinId(val) {
+            if (val) {
+                this.initial();
+            }
         }
     },
     created () {
-        this.loadCoinById()
-            .then(() => {
-                return this.loadGraphicData();
-            })
-            .then(() => {
-                this.loadCoinsMarket();
-            })
+        this.initial();
     },
     methods: {
+        initial () {
+            this.loadCoinById()
+                .then(() => {
+                    return this.loadGraphicData();
+                })
+                .then(() => {
+                    this.loadCoinsMarket();
+                })
+        },
         loadCoinById() {
             return this.$store.dispatch('loadCoinById', {
                 id: this.coinId,
@@ -252,6 +260,7 @@ export default {
             })
         },
         loadGraphicData() {
+            this.graphicLoading = true;
             Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv", (err, rows) => {
                 function unpack(rows, key) {
                     return rows.map(function (row) {

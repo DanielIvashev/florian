@@ -64,9 +64,6 @@
   &__td, &__th {
     text-align: left;
     position: relative;
-    :deep(.q-checkbox__icon) {
-      color: #da0f19;
-    }
   }
   &__t-body {
     position: relative;
@@ -76,7 +73,7 @@
       cursor: pointer;
     }
     &:hover {
-      .big-table__sort-icon {
+      .table__sort-icon {
         opacity: 1;
       }
     }

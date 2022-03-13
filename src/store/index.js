@@ -2,13 +2,11 @@ import { createStore } from 'vuex';
 import { rootActions } from './rootActions';
 import { rootGetters } from './rootGetters';
 import { rootMutations } from './rootMutations';
-import { tables } from './modules/tables';
+// import { auth } from './modules/auth';
 import { themeTogglerMiddleware } from './middlewares';
 
 export const store = createStore({
-  modules: {
-    tables,
-  },
+  modules: {},
   state() {
     return {
       isLightTheme: true,

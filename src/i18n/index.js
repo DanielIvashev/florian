@@ -7,7 +7,7 @@ const defaultOptions = {
   fallbackLocale: 'en',
   legacy: true,
   missing(locale, key, vm, values) {
-    return 'loading...';
+    return key;
   },
 };
 function setupI18n(options = defaultOptions) {
@@ -28,11 +28,7 @@ export function setI18nLanguage(i18n, locale) {
 
 export async function loadLocaleMessages(i18n, locale) {
   // load locale messages with dynamic import
-  const messages = await new Promise((resolve) =>
-    setTimeout(() => {
-      resolve(import(`./locales/${locale}.json`));
-    }, 2000)
-  );
+  const messages = await import(`./locales/${locale}.json`);
 
   // set locale and locale message
   i18n.global.setLocaleMessage(locale, messages.default);

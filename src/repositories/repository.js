@@ -19,15 +19,15 @@ function processQueue(error, token = null) {
 }
 
 function getAuth() {
-  return 'Bearer tGzv3JOkF0XG5Qx2TlKWIA';
+  return `Bearer tGzv3JOkF0XG5Qx2TlKWIA`;
 }
 
 function refreshAccessToken() {
   return axios.get('mock.data');
 }
 
-function updateToken() {
-  // update token
+function updateToken(token) {
+  localStorage.setItem('jwt', token)
 }
 
 // auto canceling request with the same endpoint

@@ -19,3 +19,8 @@ export function createNotification(options) {
     ...otherOptions,
   });
 }
+
+export const filterBy = (prop, value) => rows =>
+    value === ''
+        ? rows
+        : rows.filter(row => (row[prop] + '').toLowerCase().includes(value.trim().toLowerCase()))

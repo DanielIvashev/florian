@@ -24,6 +24,6 @@ export const rootGetters = {
     return state.coinGeckoError;
   },
   getCoinGeckoLoading (state) {
-    return state.coinsGeckoLoading;
+    return state.coinGeckoLoading;
   }
 };

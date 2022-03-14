@@ -151,7 +151,6 @@
 </template>
 <script>
 import {scroll} from 'quasar'
-import {filterBy} from "@/utils";
 import {markRaw} from "vue";
 
 const {setVerticalScrollPosition} = scroll

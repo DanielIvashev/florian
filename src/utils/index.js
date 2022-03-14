@@ -20,7 +20,13 @@ export function createNotification(options) {
   });
 }
 
-export const filterBy = (prop, value) => rows =>
-    value === ''
-        ? rows
-        : rows.filter(row => (row[prop] + '').toLowerCase().includes(value.trim().toLowerCase()))
+export function initMemberStack () {
+    if (!window.MemberStack) {
+        const elem = document.createElement( 'script' );
+        elem.type = 'text/javascript';
+        elem.setAttribute('data-memberstack-id', import.meta.env.VITE_DATA_MEMBERSTACK_ID)
+        elem.async = true;
+        document.body.appendChild( elem );
+        elem.src = import.meta.env.VITE_MEMBERSTACK_API_URL;
+    }
+}

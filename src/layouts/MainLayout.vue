@@ -20,6 +20,7 @@
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import Drawer from '@/components/Drawer.vue';
+import { initMemberStack } from "@/utils";
 
 export default {
     name: 'MainLayout',
@@ -32,6 +33,7 @@ export default {
         return {};
     },
     mounted() {
+        initMemberStack()
     }
 };
 </script>

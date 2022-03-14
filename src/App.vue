@@ -32,6 +32,7 @@ export default {
     },
     mounted () {
         this.$store.dispatch('initialize');
+        console.log(window.MemberStack);
     },
     methods: {}
 };

@@ -18,6 +18,7 @@
                         <q-input
                             filled
                             v-model="email"
+                            data-ms-member="email"
                             label="Your email *"
                             lazy-rules
                             :rules="[ val => val && val.length > 0 || 'Please type something']"
@@ -26,13 +27,15 @@
                             type="password"
                             filled
                             v-model="password"
+                            data-ms-member="password"
                             label="Your password *"
                             lazy-rules
                             :rules="[ val => val && val.length > 0 || 'Please type something']"
                         />
                         <div>
-                            <q-btn label="Submit" type="submit" color="primary"/>
+                            <q-btn label="Submit" type="submit" color="primary" />
                             <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
+                            <q-btn label="password reset" href="/#/ms/password-reset" color="primary" flat class="q-ml-sm"/>
                         </div>
                     </q-form>
                 </q-card-section>

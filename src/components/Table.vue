@@ -129,7 +129,7 @@
                                 </router-link>
                             </template>
                             <template v-else>
-                                {{ row[column.name] }}
+                                {{ column.format ? column.format(row[column.name]) : row[column.name] }}
                             </template>
                         </td>
                     </template>

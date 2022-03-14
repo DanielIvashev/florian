@@ -10,9 +10,10 @@
                             spinner-color="white"
                         />
                     </div>
-                    <h4 class="login__title">{{ $t('messages.login') }}</h4>
+                    <h4 class="login__title">Login</h4>
                     <q-form
                         class="q-gutter-md"
+                        data-ms-form="login"
                     >
                         <q-input
                             filled
@@ -43,17 +44,15 @@
 <script>
 import { createHelpers } from 'vuex-map-fields';
 
-const {mapFields} = createHelpers({
+const { mapFields } = createHelpers({
     getterType: 'auth/getField',
     mutationType: 'auth/updateField',
 });
+
 export default {
     name: 'Login',
     computed: {
         ...mapFields(['loginForm.email', 'loginForm.password']),
-        loginForm() {
-            return this.$store.getters['auth/loginForm'] || {};
-        },
     }
 }
 </script>

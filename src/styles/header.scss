@@ -1,9 +1,44 @@
 .header {
-  &__logo {
-    width: 120px;
-  }
-  &__logo-wrapper {
-    display: flex;
-    justify-content: center;
-  }
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(5px);
+    padding: 16px 16px 16px 0;
+
+    :deep(.q-toolbar) {
+        min-height: auto;
+    }
+    &__logo-wrapper {
+        width: 133px;
+        display: flex;
+        align-items: flex-end;
+        margin-right: 10px;
+    }
+    &__menu-toggle-btn {
+        color: black;
+    }
+    &__toolbar-title {
+        display: flex;
+    }
+    &__navigation-links {
+        display: flex;
+        gap: 10px;
+    }
+    &__navigation-link {
+        background-color: $primary;
+        text-decoration: none;
+        color: white;
+        border-radius: 6px;
+        transition: .3s;
+        padding: 4px 12px;
+        &:hover {
+            box-shadow: 0 1px 5px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%);
+        }
+    }
+}
+
+@media (min-width: $breakpoint-sm-max) {
+    .header {
+        &__menu-toggle-btn {
+           display: none;
+        }
+    }
 }

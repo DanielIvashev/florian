@@ -1,5 +1,5 @@
 import { signUp, login } from "@/firebase";
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from "vuex-map-fields";
 
 export const auth = {
     namespaced: true,
@@ -11,6 +11,7 @@ export const auth = {
             email: '',
             password: ''
         },
+        test: '',
         signUpForm: {
             name: '',
             email: '',
@@ -19,9 +20,6 @@ export const auth = {
     }),
     mutations: {
         updateField,
-        SET_LOGGED_IN (state, {loggedIn}) {
-            state.loggedIn = loggedIn;
-        },
         SET_LOGIN_LOADING (state) {
             state.loginFormLoading = true;
             state.loginFormError = null;
@@ -59,12 +57,6 @@ export const auth = {
         }
     },
     getters: {
-        getField,
-        isLoggedIn(state) {
-            return state.loggedIn;
-        },
-        loginForm(state) {
-            return state.loginForm;
-        },
+        getField
     },
 };

@@ -1,0 +1,16 @@
+.footer {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 22px 10px;
+    background-color: #1c1d1f;
+
+    &__logo-wrapper {
+        width: 100px;
+    }
+    &__text {
+        color: #939596;;
+    }
+}

@@ -1,0 +1,10 @@
+.drawer {
+}
+@media (min-width: $breakpoint-sm-max) {
+    .drawer {
+        :deep(.q-drawer-container) {
+            display: none;
+        }
+    }
+
+}

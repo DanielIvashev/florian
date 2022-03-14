@@ -67,7 +67,6 @@ export default {
                         name: 'name',
                         label: 'Name',
                         format: (val) => val,
-                        field: (row) => row.name,
                         sortable: {
                             handler: (a, b) => a.name.localeCompare(b.name),
                         }
@@ -75,8 +74,7 @@ export default {
                     {
                         name: 'current_price',
                         label: 'Current Price',
-                        format: (val) => val,
-                        field: (row) => row.current_price,
+                        format: (val) => val + '$',
                         sortable: {
                             handler: (a, b) => a.current_price - b.current_price,
                         }
@@ -85,7 +83,6 @@ export default {
                         name: 'symbol',
                         label: 'Symbol',
                         format: (val) => val,
-                        field: (row) => row.symbol,
                         sortable: {
                             handler: (a, b) => a.symbol - b.symbol,
                         }
@@ -94,7 +91,6 @@ export default {
                         name: 'price_change_percentage_24h',
                         label: 'Price Change (24h)',
                         format: (val) => val + '%',
-                        field: (row) => row.price_change_percentage_24h,
                         sortable: {
                             handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
                         }
@@ -102,7 +98,7 @@ export default {
                     {
                         name: 'market_cap',
                         label: 'Market Cap',
-                        format: (val) => val + '%',
+                        format: (val) => val + '$',
                         field: (row) => row.market_cap,
                         sortable: {
                             handler: (a, b) => a.market_cap - b.market_cap,
@@ -203,7 +199,6 @@ export default {
                         name: 'name',
                         label: 'Name',
                         format: (val) => val,
-                        field: (row) => row.name,
                         sortable: {
                             handler: (a, b) => a.name.localeCompare(b.name),
                         }
@@ -211,8 +206,7 @@ export default {
                     {
                         name: 'current_price',
                         label: 'Current Price',
-                        format: (val) => val,
-                        field: (row) => row.current_price,
+                        format: (val) => val + '$',
                         sortable: {
                             handler: (a, b) => a.current_price - b.current_price,
                         }
@@ -221,7 +215,6 @@ export default {
                         name: 'symbol',
                         label: 'Symbol',
                         format: (val) => val,
-                        field: (row) => row.symbol,
                         sortable: {
                             handler: (a, b) => a.symbol - b.symbol,
                         }
@@ -230,7 +223,6 @@ export default {
                         name: 'price_change_percentage_24h',
                         label: 'Symbol',
                         format: (val) => val + '%',
-                        field: (row) => row.price_change_percentage_24h,
                         sortable: {
                             handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
                         }
@@ -238,8 +230,7 @@ export default {
                     {
                         name: 'market_cap',
                         label: 'Market Cap',
-                        format: (val) => val + '%',
-                        field: (row) => row.market_cap,
+                        format: (val) => val + '$',
                         sortable: {
                             handler: (a, b) => a.market_cap - b.market_cap,
                         }

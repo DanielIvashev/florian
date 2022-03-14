@@ -285,6 +285,10 @@ export default {
                 }
                 const data = [trace1, trace2];
                 const layout = {
+                    legend: {
+                        x: 0,
+                        y: -0.6
+                    },
                     title: `${this.getCoinGecko.name} development`,
                     xaxis: {
                         autorange: true,

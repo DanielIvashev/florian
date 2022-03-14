@@ -14,23 +14,23 @@ export const router = createRouter({
     });
   },
 });
-//
-// router.beforeEach((to, from, next) => {
-//   const middleware = to.meta.middleware;
-//
-//   if (!middleware) {
-//     return next();
-//   }
-//
-//   const context = {
-//     to,
-//     from,
-//     next,
-//     store,
-//   };
-//
-//   return middleware[0]({
-//     ...context,
-//     next: middlewareFactory(context, middleware, 1),
-//   });
-// });
+
+router.beforeEach((to, from, next) => {
+  const middleware = to.meta.middleware;
+
+  if (!middleware) {
+    return next();
+  }
+
+  const context = {
+    to,
+    from,
+    next,
+    store,
+  };
+
+  return middleware[0]({
+    ...context,
+    next: middlewareFactory(context, middleware, 1),
+  });
+});

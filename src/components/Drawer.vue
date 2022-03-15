@@ -9,17 +9,17 @@
         >
             <q-scroll-area class="fit">
                 <q-list>
-                    <q-item clickable v-ripple tag="a">
+                    <q-item clickable v-ripple tag="a" href="/#/ms/profile">
                         <q-item-section>
                             My Profile
                         </q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple tag="a">
+                    <q-item clickable v-ripple tag="a" :to="{ name: 'BullbearSignal' }">
                         <q-item-section>
                             Bullbear Signal
                         </q-item-section>
                     </q-item>
-                    <q-item clickable v-ripple tag="a">
+                    <q-item clickable v-ripple tag="a" href="/#/ms/logout" @click="logout">
                         <q-item-section>
                             Logout
                         </q-item-section>
@@ -42,9 +42,9 @@ export default {
     computed: {
         ...mapFields(['drawer.open'])
     },
-    watch: {
-        drawer(val) {
-            console.log(val)
+    methods: {
+        logout () {
+            this.$router.push({ name: 'Login' })
         }
     }
 }

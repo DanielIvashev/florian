@@ -1,5 +1,7 @@
+import {getCookie} from "@/utils";
+
 export default function guest({next, store}) {
-    if (document.cookie.indexOf('__ms=') !== -1) {
+    if (getCookie('__ms')) {
         return next({
             name: 'Dashboard',
         });

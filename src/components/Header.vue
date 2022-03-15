@@ -12,16 +12,11 @@
                         spinner-color="white"
                     />
                 </div>
-                <q-input v-model="text" dense borderless placeholder="Search">
-                    <template v-slot:prepend>
-                        <q-icon name="search" />
-                    </template>
-                </q-input>
                 <q-space />
                 <div class="header__navigation-links">
-                    <a href="#" class="header__navigation-link">My Profile</a>
-                    <a href="#" class="header__navigation-link">Bullbear Signal</a>
-                    <a href="#" class="header__navigation-link">logout</a>
+                    <a href="/#/ms/profile" class="header__navigation-link">My Profile</a>
+                    <router-link :to="{ name: 'BullbearSignal' }" class="header__navigation-link">Bullbear Signal</router-link>
+                    <a href="/#/ms/logout" class="header__navigation-link" @click="logout">logout</a>
                 </div>
             </q-toolbar-title>
         </q-toolbar>
@@ -36,12 +31,16 @@ export default {
     data() {
         return {
             logoPlaceholder,
-            text: '',
         }
     },
     computed: {
         drawerState () {
             return this.$store.getters['navigation/getDrawerState'];
+        }
+    },
+    methods: {
+        logout () {
+            this.$router.push({ name: 'Login' })
         }
     }
 }

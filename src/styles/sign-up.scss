@@ -25,4 +25,20 @@
         text-align: center;
         font-size: 1.75rem;
     }
+    &__have-account-card {
+        margin-top: 20px;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    &__have-account-text {
+        color: #64636e;
+    }
+    &__have-account-link {
+        text-decoration: none;
+        cursor: pointer;
+        color: $primary;
+        :hover {
+            opacity: .9;
+        }
+    }
 }

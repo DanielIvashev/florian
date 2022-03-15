@@ -1,4 +1,4 @@
-import { markRaw } from 'vue';
+import {markRaw} from 'vue';
 
 export const rootMutations = {
     TOGGLE_THEME(state) {
@@ -44,4 +44,7 @@ export const rootMutations = {
         state.coinGeckoLoading = false;
         state.coinGeckoError = error;
     },
+    SET_MEMBER_FROM_MEMBERSTACK(state, { member }) {
+        state.memberFromMemberStack = markRaw(member)
+    }
 };

@@ -1,5 +1,6 @@
 const Dashboard = () => import('../pages/Dashboard.vue');
 const SpecialCoin = () => import('../pages/SpecialCoin.vue');
+const BullbearSignal = () => import('../pages/BullbearSignal.vue');
 const NotFound = () => import('../pages/NotFound.vue');
 const Login = () => import('../pages/Login.vue');
 const SignUp = () => import('../pages/SignUp.vue');
@@ -39,6 +40,14 @@ export const routes = [
         path: '/dashboard/special-coin/:id',
         name: 'SpecialCoin',
         component: SpecialCoin,
+        meta: {
+            middleware: [auth]
+        }
+    },
+    {
+        path: '/dashboard/bullbear-signal',
+        name: 'BullbearSignal',
+        component: BullbearSignal,
         meta: {
             middleware: [auth]
         }

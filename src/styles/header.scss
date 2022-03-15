@@ -19,7 +19,7 @@
         display: flex;
     }
     &__navigation-links {
-        display: flex;
+        display: none;
         gap: 10px;
     }
     &__navigation-link {
@@ -39,6 +39,9 @@
     .header {
         &__menu-toggle-btn {
            display: none;
+        }
+        &__navigation-links {
+            display: flex;
         }
     }
 }

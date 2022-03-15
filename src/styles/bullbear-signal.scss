@@ -1,0 +1,37 @@
+.bullbear-signal {
+    &__form-card {
+        max-width: 400px;
+        margin: 20px auto 0;
+    }
+    &__logo-wrapper {
+        width: 90px;
+        margin: 0 auto;
+    }
+    &__title {
+        font-size: 28px;
+        margin-top: 0;
+        line-height: 1;
+        text-align: center;
+        color: $primary;
+    }
+    &__logo {
+
+    }
+    &__label {
+        display: block;
+        color: rgba(#000, 0.6);
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    &__submit-btn {
+        width: 100%;
+        text-transform: none;
+        font-weight: 700;
+    }
+    &__discord-link {
+        display: block;
+        text-align: center;
+        margin-bottom: 7px;
+        color: $primary;
+    }
+}

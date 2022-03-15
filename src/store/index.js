@@ -4,12 +4,14 @@ import { rootGetters } from './rootGetters';
 import { rootMutations } from './rootMutations';
 import { auth } from './modules/auth';
 import { navigation } from './modules/navigation';
+import { bullbearSignal } from './modules/bullbearSignal';
 import { themeTogglerMiddleware } from './middlewares';
 
 export const store = createStore({
     modules: {
         auth,
-        navigation
+        navigation,
+        bullbearSignal,
     },
     state() {
         return {
@@ -23,6 +25,7 @@ export const store = createStore({
             coinGecko: null,
             coinGeckoError: null,
             coinGeckoLoading: false,
+            memberFromMemberStack: {}
         };
     },
     getters: {

@@ -12,6 +12,9 @@
             </q-page>
         </q-page-container>
         <custom-footer />
+        <form ms-update="profile" style="display: none" v-once>
+            <input type="text" ms-field="liked-coins" hidden aria-hidden="true" id="likedCoinsInput">
+        </form>
     </q-layout>
 </template>
 

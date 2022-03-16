@@ -1,1 +1,0 @@
-import{x as t,I as e,P as r}from"./quasar.c7fe1536.js";import{_ as n}from"./index.1354ada4.js";const a={name:"NotFound"};function s(o,p,u,c,d,f){return t(),e("div",null," not found "+r(o.$route)+" "+r(o.$router),1)}var m=n(a,[["render",s]]);export{m as default};

@@ -102,8 +102,6 @@ export const dashboard = {
                 ]),
         }
         return {
-            likedCoinsIds: [],
-            likedCoinsData: [],
             mainCoinsTable: {
                 visibleColumns: visibleColumns.default,
                 columns: columns.default,
@@ -202,9 +200,6 @@ export const dashboard = {
         },
         getSecondaryCoinsGeckoTableConfig(state) {
             return state.secondaryCoinsTable || {};
-        },
-        getLikedCoinsIds(state) {
-            return state.likedCoinsIds || [];
         },
     },
 };

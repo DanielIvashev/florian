@@ -32,7 +32,8 @@ export const store = createStore({
             coinGecko: null,
             coinGeckoError: null,
             coinGeckoLoading: false,
-            memberFromMemberStack: {}
+            memberFromMemberStack: {},
+            likedCoins: [],
         };
     },
     getters: {

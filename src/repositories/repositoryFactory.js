@@ -1,9 +1,11 @@
 import CoinGeckoRepository from './coinGeckoRepository';
+import BullbearApiRepository from './BullbearApiRepository';
 
 const repositories = {
-  gecko: CoinGeckoRepository,
+    gecko: CoinGeckoRepository,
+    bullbear: BullbearApiRepository
 };
 
 export default {
-  get: (name) => repositories[name],
+    get: (name) => repositories[name],
 };

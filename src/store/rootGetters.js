@@ -28,5 +28,11 @@ export const rootGetters = {
     },
     getMemberFromMemberstack(state) {
         return state.memberFromMemberStack || {};
+    },
+    getLikedCoins(state) {
+        return state.likedCoins || [];
+    },
+    getLikedCoinsIds(state) {
+        return (state.likedCoins || []).map(coin => coin.id);
     }
 };

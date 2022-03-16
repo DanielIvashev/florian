@@ -21,14 +21,14 @@
                                 :visible-columns="getSecondaryCoinsGeckoTableConfig.visibleColumns"
                                 :liked-coins-ids="getLikedCoinsIds"
                                 @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'likedCoinsTable' })"
-                                @update:liked-coins-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
+                                @update:liked-coins-ids="updateLikedCoins"
                             />
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
                 <transition name="router">
                     <q-expansion-item
-                        v-if="likedCoins.length"
+                        v-if="getLikedCoins.length"
                         v-model="isLikedCoinsTableOpen"
                         popup
                         icon="perm_identity"
@@ -38,13 +38,13 @@
                             <q-card-section>
                                 <custom-table
                                     type="small"
-                                    :coins="likedCoins"
+                                    :coins="getLikedCoins"
                                     :columns="getLikedCoinsGeckoTableConfig.columns"
                                     :loading="getLikedCoinsGeckoLoading"
                                     :visible-columns="getLikedCoinsGeckoTableConfig.visibleColumns"
                                     :liked-coins-ids="getLikedCoinsIds"
                                     @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'secondaryCoinsTable' })"
-                                    @update:liked-row-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
+                                    @update:liked-coins-ids="updateLikedCoins"
                                 />
                             </q-card-section>
                         </q-card>
@@ -65,18 +65,14 @@
                 @update:current-page="(event) => twoWayBindingsHandler({ event, name: 'currentPage', table: 'mainCoinsTable' })"
                 @update:time-range="(event) => twoWayBindingsHandler({ event, name: 'timeRange', table: 'mainCoinsTable' })"
                 @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'mainCoinsTable' })"
-                @update:liked-coins-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
+                @update:liked-coins-ids="updateLikedCoins"
             />
-            <form ms-update="profile" style="display: none">
-                <input type="text" ms-field="liked-coins" hidden aria-hidden="true" ref="likedCoinsInput">
-            </form>
         </div>
     </div>
 </template>
 
 <script>
 import Table from '@/components/Table.vue';
-import {debounce} from 'quasar'
 
 const ALL_COINS_COUNT = 13100;
 
@@ -89,7 +85,6 @@ export default {
         return {
             isSmallTableOpen: false,
             isLikedCoinsTableOpen: false,
-            likedCoins: [],
         }
     },
     computed: {
@@ -97,7 +92,10 @@ export default {
             return this.$store.getters['dashboard/getLikedCoinsGeckoTableConfig'];
         },
         getLikedCoinsIds () {
-           return this.$store.getters['dashboard/getLikedCoinsIds'] || [];
+           return this.$store.getters['getLikedCoinsIds'] || [];
+        },
+        getLikedCoins () {
+            return this.$store.getters['getLikedCoins'] || []
         },
         getMainCoinsGeckoTableConfig () {
             return this.$store.getters['dashboard/getMainCoinsGeckoTableConfig'];
@@ -135,37 +133,14 @@ export default {
         'getMainCoinsGeckoTableConfig.currentPage'(val) {
             this.loadCoinsMarket();
         },
-        getCoinsGecko (val) {
-            this.setLikedCoinsFromBackend()
-        },
-        getLikedCoinsIds (val, oldVal) {
-            const findDifferentElements = val.filter(e => !~oldVal.indexOf(e)).concat(oldVal.filter(e => !~val.indexOf(e)))
-            const uniqueIds = [...new Set(findDifferentElements)];
-            uniqueIds.forEach(id => {
-                const savedCoinsFromBackend = JSON.parse(this.$refs.likedCoinsInput.value || '[]');
-                const coinDataById = [...this.getCoinsGecko, ...savedCoinsFromBackend].find(coin => coin.id === id);
-                if (coinDataById) {
-                    if (val.includes(id)) {
-                        const copyOfLikedCoins = [...this.likedCoins];
-                        copyOfLikedCoins.unshift(coinDataById)
-                        this.likedCoins = copyOfLikedCoins
-                    } else {
-                        this.likedCoins = this.likedCoins.filter(coin => coin.id !== id)
-                    }
-                }
-            })
-        },
-        likedCoins (val) {
-            const reversedSaveVersion = [...val].reverse()
-            this.updateLikedRowsInMemberstack(reversedSaveVersion);
-        }
+
     },
     created() {
-        this.updateLikedRowsInMemberstack = debounce(this.updateLikedRowsInMemberstack, 1000)
         this.loadCoinsMarket();
     },
     mounted () {
         window.MemberStack.reload();
+        this.$store.dispatch('loadCoinBullbearInfo')
     },
     methods: {
         twoWayBindingsHandler ({ event, name, table }) {
@@ -181,15 +156,8 @@ export default {
                 }
             })
         },
-        updateLikedRowsInMemberstack(val) {
-            const likedCoinsToString = JSON.stringify(val);
-            this.$store.dispatch('updateProfileInfo', { fields: [{value: likedCoinsToString, name: 'liked-coins'}] })
-        },
-        setLikedCoinsFromBackend () {
-            if (this.getCoinsGecko.length) {
-                const value = JSON.parse(this.$refs.likedCoinsInput.value || '[]').map(coin => coin.id)
-                this.twoWayBindingsHandler({ event: value, name: 'likedCoinsIds' })
-            }
+        updateLikedCoins(coin) {
+            this.$store.dispatch('updateLikedCoins', { coin })
         }
     }
 };

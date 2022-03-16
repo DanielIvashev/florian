@@ -117,7 +117,7 @@
                                 <q-checkbox
                                     class="table__like-icon"
                                     :model-value="likedCoinsIds"
-                                    @update:model-value="event => $emit('update:liked-coins-ids', event)"
+                                    @update:model-value="() => $emit('update:liked-coins-ids', row)"
                                     checked-icon="favorite"
                                     unchecked-icon="favorite_border"
                                     size="30px"

@@ -44,6 +44,12 @@ export const rootMutations = {
         state.coinGeckoError = error;
     },
     SET_MEMBER_FROM_MEMBERSTACK(state, { member }) {
-        state.memberFromMemberStack = markRaw(member)
+        state.memberFromMemberStack = markRaw(member);
+    },
+    SET_LIKED_COINS_IDS(state, { coins }) {
+        state.likedCoinsIds = markRaw(coins);
+    },
+    SET_LIKED_COINS(state, { coins }) {
+        state.likedCoins = markRaw(coins);
     }
 };

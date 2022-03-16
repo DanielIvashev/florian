@@ -1,5 +1,5 @@
 import CoinGeckoRepository from './coinGeckoRepository';
-import BullbearApiRepository from './BullbearApiRepository';
+import BullbearApiRepository from './bullbearApiRepository';
 
 const repositories = {
     gecko: CoinGeckoRepository,

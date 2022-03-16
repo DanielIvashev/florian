@@ -31,7 +31,8 @@ export default {
     data() {
         return {};
     },
-    mounted() {
-    }
+    mounted () {
+        window.MemberStack.reload();
+    },
 };
 </script>

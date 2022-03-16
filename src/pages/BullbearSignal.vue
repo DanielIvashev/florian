@@ -86,9 +86,7 @@ export default {
         }
     },
     mounted() {
-        if (window.MemberStack) {
-            window.MemberStack.reload();
-        }
+        window.MemberStack.reload();
     }
 }
 </script>

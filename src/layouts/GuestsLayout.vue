@@ -15,5 +15,8 @@
 
 export default {
     name: 'Guests layout',
+    mounted () {
+        window.MemberStack.reload();
+    },
 }
 </script>

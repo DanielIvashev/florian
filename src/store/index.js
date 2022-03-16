@@ -2,18 +2,23 @@ import { createStore } from 'vuex';
 import { rootActions } from './rootActions';
 import { rootGetters } from './rootGetters';
 import { rootMutations } from './rootMutations';
+
 import { auth } from './modules/auth';
 import { navigation } from './modules/navigation';
 import { bullbearSignal } from './modules/bullbearSignal';
 import { dashboard } from "./modules/dashboard";
+import { specialCoin } from "./modules/specialCoin";
+
 import { themeTogglerMiddleware } from './middlewares';
+
 
 export const store = createStore({
     modules: {
         auth,
         navigation,
         bullbearSignal,
-        dashboard
+        dashboard,
+        specialCoin
     },
     state() {
         return {

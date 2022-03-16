@@ -19,7 +19,8 @@
                 v-if="timeRange"
                 transition-show="jump-up"
                 transition-hide="jump-up"
-                v-model="timeRange.value"
+                :model-value="timeRange.value"
+                @update:model-value="event => $emit('update:time-range', event)"
                 outlined
                 dense
                 options-dense
@@ -36,7 +37,8 @@
                 v-if="visibleColumns"
                 transition-show="jump-up"
                 transition-hide="jump-up"
-                v-model="visibleColumns"
+                :model-value="visibleColumns"
+                @update:model-value="event => $emit('update:visible-columns', event)"
                 multiple
                 outlined
                 dense
@@ -114,8 +116,8 @@
                             <template v-else-if="column.name === 'likes'">
                                 <q-checkbox
                                     class="table__like-icon"
-                                    :model-value="likedRowIds"
-                                    @update:model-value="event => $emit('update:liked-row-ids', event)"
+                                    :model-value="likedCoinsIds"
+                                    @update:model-value="event => $emit('update:liked-coins-ids', event)"
                                     checked-icon="favorite"
                                     unchecked-icon="favorite_border"
                                     size="30px"
@@ -178,7 +180,7 @@ export default {
         rowsPerPage: {
             type: Object
         },
-        likedRowIds: {
+        likedCoinsIds: {
             type: Array
         },
         currentPage: {
@@ -195,7 +197,14 @@ export default {
             default: 'big'
         }
     },
-    emits: ['on-search', 'update:current-page', 'update:liked-row-ids', 'update:search-query'],
+    emits: [
+        'on-search',
+        'update:current-page',
+        'update:liked-coins-ids',
+        'update:search-query',
+        'update:time-range',
+        'update:visible-columns'
+    ],
     data() {
         return {
             currentSort: {

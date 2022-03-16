@@ -1,8 +1,6 @@
 <template>
   <div>
-    not found
-    {{ $route }}
-    {{ $router }}
+    not found page
   </div>
 </template>
 

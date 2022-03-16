@@ -15,8 +15,5 @@
 
 export default {
     name: 'Guests layout',
-    mounted() {
-        this.$store.dispatch('initializeMemberStack')
-    }
 }
 </script>

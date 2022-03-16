@@ -1,5 +1,3 @@
-import {getField, updateField} from "vuex-map-fields";
-
 export const bullbearSignal = {
     namespaced: true,
     state: () => ({
@@ -85,7 +83,6 @@ export const bullbearSignal = {
         }
     }),
     mutations: {
-        updateField,
         UPDATE_FIELD_VALUE(state, {value, name}) {
             state.fields[name].value = value;
         },
@@ -99,6 +96,8 @@ export const bullbearSignal = {
     },
     actions: {},
     getters: {
-        getField,
+        getFields (state) {
+            return state.fields || {};
+        }
     },
 };

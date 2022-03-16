@@ -14,12 +14,14 @@
                     <q-card>
                         <q-card-section>
                             <custom-table
-                                :coins="getCoinsGeckoSmall"
-                                :columns="smallTable.columns"
-                                :loading="getCoinsGeckoLoading"
-                                :visible-columns="smallTable.visibleColumns"
-                                v-model:liked-row-ids="likedCoinsIds"
                                 type="small"
+                                :coins="getCoinsGeckoSmall"
+                                :columns="getSecondaryCoinsGeckoTableConfig.columns"
+                                :loading="getCoinsGeckoLoading"
+                                :visible-columns="getSecondaryCoinsGeckoTableConfig.visibleColumns"
+                                :liked-coins-ids="getLikedCoinsIds"
+                                @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'likedCoinsTable' })"
+                                @update:liked-coins-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
                             />
                         </q-card-section>
                     </q-card>
@@ -35,12 +37,14 @@
                         <q-card>
                             <q-card-section>
                                 <custom-table
-                                    :coins="likedCoins"
-                                    :columns="likedCoinsGeckoTable.columns"
-                                    :loading="getLikedCoinsGeckoLoading"
-                                    :visible-columns="likedCoinsGeckoTable.visibleColumns"
-                                    v-model:liked-row-ids="likedCoinsIds"
                                     type="small"
+                                    :coins="likedCoins"
+                                    :columns="getLikedCoinsGeckoTableConfig.columns"
+                                    :loading="getLikedCoinsGeckoLoading"
+                                    :visible-columns="getLikedCoinsGeckoTableConfig.visibleColumns"
+                                    :liked-coins-ids="getLikedCoinsIds"
+                                    @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'secondaryCoinsTable' })"
+                                    @update:liked-row-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
                                 />
                             </q-card-section>
                         </q-card>
@@ -48,16 +52,20 @@
                 </transition>
             </q-list>
             <custom-table
-                :coins="getCoinsGecko"
-                :columns="bigTable.columns"
-                :loading="getCoinsGeckoLoading"
-                :time-range="bigTable.timeRange"
-                :rows-per-page="bigTable.rowsPerPage"
-                :visible-columns="bigTable.visibleColumns"
-                v-model:current-page="bigTable.currentPage"
-                v-model:liked-row-ids="likedCoinsIds"
-                :max-page="bigTablePagesCount"
                 type="big"
+                :coins="getCoinsGecko"
+                :columns="getMainCoinsGeckoTableConfig.columns"
+                :loading="getCoinsGeckoLoading"
+                :time-range="getMainCoinsGeckoTableConfig.timeRange"
+                :rows-per-page="getMainCoinsGeckoTableConfig.rowsPerPage"
+                :visible-columns="getMainCoinsGeckoTableConfig.visibleColumns"
+                :current-page="getMainCoinsGeckoTableConfig.currentPage"
+                :liked-coins-ids="getLikedCoinsIds"
+                :max-page="bigTablePagesCount"
+                @update:current-page="(event) => twoWayBindingsHandler({ event, name: 'currentPage', table: 'mainCoinsTable' })"
+                @update:time-range="(event) => twoWayBindingsHandler({ event, name: 'timeRange', table: 'mainCoinsTable' })"
+                @update:visible-columns="(event) => twoWayBindingsHandler({ event, name: 'visibleColumns', table: 'mainCoinsTable' })"
+                @update:liked-coins-ids="(event) => twoWayBindingsHandler({ event, name: 'likedCoinsIds' })"
             />
             <form ms-update="profile" style="display: none">
                 <input type="text" ms-field="liked-coins" hidden aria-hidden="true" ref="likedCoinsInput">
@@ -67,8 +75,7 @@
 </template>
 
 <script>
-import Table from "@/components/Table.vue";
-import {markRaw} from "vue";
+import Table from '@/components/Table.vue';
 import {debounce} from 'quasar'
 
 const ALL_COINS_COUNT = 13100;
@@ -82,357 +89,21 @@ export default {
         return {
             isSmallTableOpen: false,
             isLikedCoinsTableOpen: false,
-            likedCoinsGeckoTable: {
-                columns: markRaw([
-                    {
-                        name: 'image',
-                        label: 'Logo',
-                        required: true
-                    },
-                    {
-                        name: 'name',
-                        label: 'Name',
-                        format: (val) => val,
-                        sortable: {
-                            handler: (a, b) => a.name.localeCompare(b.name),
-                        }
-                    },
-                    {
-                        name: 'market_cap',
-                        label: 'Market Cap',
-                        format: (val) => val + '$',
-                        field: (row) => row.market_cap,
-                        sortable: {
-                            handler: (a, b) => a.market_cap - b.market_cap,
-                        }
-                    },
-                    {
-                        name: 'current_price',
-                        label: 'Current Price',
-                        format: (val) => val + '$',
-                        sortable: {
-                            handler: (a, b) => a.current_price - b.current_price,
-                        }
-                    },
-                    {
-                        name: 'price_change_percentage_24h',
-                        label: 'Price Change (24h)',
-                        format: (val) => val + '%',
-                        sortable: {
-                            handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
-                        }
-                    },
-                    {
-                        name: 'mentions',
-                        label: 'Mentions',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'sentiment',
-                        label: 'Sentiment',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'diffusion',
-                        label: 'Diffusion',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'reach',
-                        label: 'Reach',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'likes',
-                        label: 'Like',
-                        format: (val) => val,
-                        field: (row) => '',
-                        sortable: {
-                            handler: (a, b) => {
-                                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
-                                    return 0;
-                                }
-                                const hasLike = (this.likedRowIds || []).includes(a.id);
-                                return hasLike ? 1 : -1
-                            },
-                        }
-                    },
-                    {
-                        name: 'pageLink',
-                        label: '',
-                        required: true
-                    },
-                ]),
-                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
-            },
-            bigTable: {
-                columns: markRaw([
-                    {
-                        name: 'image',
-                        label: 'Logo',
-                        required: true
-                    },
-                    {
-                        name: 'name',
-                        label: 'Name',
-                        format: (val) => val,
-                        sortable: {
-                            handler: (a, b) => a.name.localeCompare(b.name),
-                        }
-                    },
-                    {
-                        name: 'market_cap',
-                        label: 'Market Cap',
-                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
-                        field: (row) => row.market_cap,
-                        sortable: {
-                            handler: (a, b) => a.market_cap - b.market_cap,
-                        }
-                    },
-                    {
-                        name: 'current_price',
-                        label: 'Current Price',
-                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
-                        sortable: {
-                            handler: (a, b) => a.current_price - b.current_price,
-                        }
-                    },
-                    {
-                        name: 'price_change_percentage_24h',
-                        label: 'Price Change (24h)',
-                        format: (val) => val + '%',
-                        sortable: {
-                            handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
-                        }
-                    },
-                    {
-                        name: 'mentions',
-                        label: 'Mentions',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'sentiment',
-                        label: 'Sentiment',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'diffusion',
-                        label: 'Diffusion',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'reach',
-                        label: 'Reach',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'likes',
-                        label: 'Like',
-                        format: (val) => val,
-                        field: (row) => '',
-                        sortable: {
-                            handler: (a, b) => {
-                                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
-                                    return 0;
-                                }
-                                const hasLike = (this.likedRowIds || []).includes(a.id);
-                                return hasLike ? 1 : -1
-                            },
-                        }
-                    },
-                    {
-                        name: 'pageLink',
-                        label: '',
-                        required: true
-                    },
-                ]),
-                currentPage: 1,
-                rowsPerPage: {
-                    value: 25,
-                    options: markRaw([
-                        {
-                            value: 25,
-                            label: '25'
-                        },
-                        {
-                            value: 50,
-                            label: '50'
-                        },
-                        {
-                            value: 100,
-                            label: '100'
-                        },
-                        {
-                            value: 150,
-                            label: '150'
-                        },
-                        {
-                            value: 200,
-                            label: '200'
-                        }
-                    ])
-                },
-                timeRange: {
-                    value: '24h',
-                    options: markRaw([
-                        {
-                            value: '1h',
-                            label: '1 hour'
-                        },
-                        {
-                            value: '24h',
-                            label: '24 hours'
-                        },
-                        {
-                            value: '7d',
-                            label: '7 days'
-                        },
-                        {
-                            value: '14d',
-                            label: '14 days'
-                        },
-                        {
-                            value: '30d',
-                            label: '30 days'
-                        },
-                        {
-                            value: '200d',
-                            label: '200 days'
-                        },
-                        {
-                            value: '1y',
-                            label: '1 year'
-                        },
-                    ])
-                },
-                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
-            },
-            smallTable: {
-                columns: markRaw([
-                    {
-                        name: 'image',
-                        label: 'Logo',
-                        required: true
-                    },
-                    {
-                        name: 'name',
-                        label: 'Name',
-                        format: (val) => val,
-                        sortable: {
-                            handler: (a, b) => a.name.localeCompare(b.name),
-                        }
-                    },
-                    {
-                        name: 'market_cap',
-                        label: 'Market Cap',
-                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
-                        field: (row) => row.market_cap,
-                        sortable: {
-                            handler: (a, b) => a.market_cap - b.market_cap,
-                        }
-                    },
-                    {
-                        name: 'current_price',
-                        label: 'Current Price',
-                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
-                        sortable: {
-                            handler: (a, b) => a.current_price - b.current_price,
-                        }
-                    },
-                    {
-                        name: 'price_change_percentage_24h',
-                        label: 'Price Change (24h)',
-                        format: (val) => val + '%',
-                        sortable: {
-                            handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
-                        }
-                    },
-                    {
-                        name: 'mentions',
-                        label: 'Mentions',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'sentiment',
-                        label: 'Sentiment',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'diffusion',
-                        label: 'Diffusion',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'reach',
-                        label: 'Reach',
-                        format: (val) => '',
-                        sortable: {
-                            handler: (a, b) => 0,
-                        }
-                    },
-                    {
-                        name: 'likes',
-                        label: 'Like',
-                        format: (val) => val,
-                        field: (row) => '',
-                        sortable: {
-                            handler: (a, b) => {
-                                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
-                                    return 0;
-                                }
-                                const hasLike = (this.likedRowIds || []).includes(a.id);
-                                return hasLike ? 1 : -1
-                            },
-                        }
-                    },
-                    {
-                        name: 'pageLink',
-                        label: '',
-                        required: true
-                    },
-                ]),
-                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
-            },
             likedCoins: [],
-            likedCoinsIds: []
         }
     },
     computed: {
-        getMemberFromMemberstack() {
-            return this.$store.getters['getMemberFromMemberstack'] || {};
+        getLikedCoinsGeckoTableConfig () {
+            return this.$store.getters['dashboard/getLikedCoinsGeckoTableConfig'];
+        },
+        getLikedCoinsIds () {
+           return this.$store.getters['dashboard/getLikedCoinsIds'] || [];
+        },
+        getMainCoinsGeckoTableConfig () {
+            return this.$store.getters['dashboard/getMainCoinsGeckoTableConfig'];
+        },
+        getSecondaryCoinsGeckoTableConfig () {
+            return this.$store.getters['dashboard/getSecondaryCoinsGeckoTableConfig'];
         },
         getCoinsGecko() {
             return this.$store.getters['getCoinsGecko'] || [];
@@ -447,27 +118,27 @@ export default {
             return this.$store.getters['getCoinsGeckoError'];
         },
         bigTablePagesCount() {
-            return Math.floor(ALL_COINS_COUNT / this.bigTable.rowsPerPage.value);
+            return Math.floor(ALL_COINS_COUNT / this.getMainCoinsGeckoTableConfig.rowsPerPage.value);
         },
         getLikedCoinsGeckoLoading() {
             return false;
         },
     },
     watch: {
-        'bigTable.timeRange.value'(val) {
+        'getMainCoinsGeckoTableConfig.timeRange.value'(val) {
             this.currentPage = 1;
             this.loadCoinsMarket();
         },
-        'bigTable.rowsPerPage.value'(val) {
+        'getMainCoinsGeckoTableConfig.rowsPerPage.value'(val) {
             this.loadCoinsMarket();
         },
-        'bigTable.currentPage'(val) {
+        'getMainCoinsGeckoTableConfig.currentPage'(val) {
             this.loadCoinsMarket();
         },
         getCoinsGecko (val) {
             this.setLikedCoinsFromBackend()
         },
-        likedCoinsIds (val, oldVal) {
+        getLikedCoinsIds (val, oldVal) {
             const findDifferentElements = val.filter(e => !~oldVal.indexOf(e)).concat(oldVal.filter(e => !~val.indexOf(e)))
             const uniqueIds = [...new Set(findDifferentElements)];
             uniqueIds.forEach(id => {
@@ -497,13 +168,16 @@ export default {
         window.MemberStack.reload();
     },
     methods: {
+        twoWayBindingsHandler ({ event, name, table }) {
+            this.$store.dispatch('dashboard/updateValue', { event, name, table })
+        },
         loadCoinsMarket() {
             return this.$store.dispatch('loadCoinsMarket', {
                 params: {
-                    ...(!!this.bigTable.timeRange.value && {price_change_percentage: this.bigTable.timeRange.value}),
-                    page: this.bigTable.currentPage,
-                    per_page: this.bigTable.rowsPerPage.value,
-                    price_change_percentage: this.bigTable.timeRange.value
+                    ...(!!this.getMainCoinsGeckoTableConfig.timeRange.value && {price_change_percentage: this.getMainCoinsGeckoTableConfig.timeRange.value}),
+                    page: this.getMainCoinsGeckoTableConfig.currentPage,
+                    per_page: this.getMainCoinsGeckoTableConfig.rowsPerPage.value,
+                    price_change_percentage: this.getMainCoinsGeckoTableConfig.timeRange.value
                 }
             })
         },
@@ -513,7 +187,8 @@ export default {
         },
         setLikedCoinsFromBackend () {
             if (this.getCoinsGecko.length) {
-                this.likedCoinsIds = JSON.parse(this.$refs.likedCoinsInput.value || '[]').map(coin => coin.id)
+                const value = JSON.parse(this.$refs.likedCoinsInput.value || '[]').map(coin => coin.id)
+                this.twoWayBindingsHandler({ event: value, name: 'likedCoinsIds' })
             }
         }
     }

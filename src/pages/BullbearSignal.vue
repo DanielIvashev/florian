@@ -16,7 +16,7 @@
                     @submit.prevent="() => {}"
                     ms-update="profile"
                 >
-                    <div v-for="(field, fieldName) in fields" :key="fieldName">
+                    <div v-for="(field, fieldName) in getFields" :key="fieldName">
                         <input :type="field.type" :value="field.value" :ms-field="fieldName" hidden aria-hidden="true">
                         <label :for="fieldName" class="bullbear-signal__label">{{ field.label }}</label>
                         <template v-if="field.type === 'select'">
@@ -63,24 +63,28 @@
 </template>
 
 <script>
-import {createHelpers} from 'vuex-map-fields';
-
-const {mapFields} = createHelpers({
-    getterType: 'bullbearSignal/getField',
-    mutationType: 'bullbearSignal/updateField',
-});
-
 export default {
     name: 'BullbearSignal',
     computed: {
-        ...mapFields(['fields']),
+        getFields () {
+            return this.$store.getters['bullbearSignal/getFields']
+        },
+        getMemberFromMemberStack () {
+            return this.$store.getters['getMemberFromMemberstack'] || {};
+        }
     },
     methods: {
         updateFieldValue({value, name}) {
             this.$store.commit('bullbearSignal/UPDATE_FIELD_VALUE', {value, name})
         }
     },
-    watch: {},
+    watch: {
+        getMemberFromMemberStack (val, oldVal) {
+            if (Object.keys(val) !== Object.keys(oldVal)) {
+                this.$store.commit('bullbearSignal/INIT_FIELDS_VALUES', { member: val })
+            }
+        }
+    },
     mounted() {
         if (window.MemberStack) {
             window.MemberStack.reload();

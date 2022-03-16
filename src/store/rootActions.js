@@ -7,8 +7,8 @@ const coinGeckoRepository = RepositoryFactory.get('gecko');
 export const rootActions = {
     initialize({commit, dispatch}) {
         const setLocale = dispatch('setLocale', {locale: 'en'});
-
-        return Promise.allSettled([setLocale]);
+        const setMember = dispatch('initializeMemberStack')
+        return Promise.allSettled([setLocale, setMember]);
     },
     async setLocale({commit, dispatch}, {locale}) {
         if (SUPPORT_LOCALES.includes(locale)) {
@@ -68,8 +68,8 @@ export const rootActions = {
     },
     initializeMemberStack({ commit, dispatch }) {
         if (window.MemberStack) {
+            window.MemberStack.reload();
             window.MemberStack.onReady.then((member) => {
-                console.log(member)
                 commit('SET_MEMBER_FROM_MEMBERSTACK', { member });
                 commit('bullbearSignal/INIT_FIELDS_VALUES', { member })
             })

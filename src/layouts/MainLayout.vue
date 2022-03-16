@@ -32,7 +32,6 @@ export default {
         return {};
     },
     mounted() {
-        this.$store.dispatch('initializeMemberStack')
     }
 };
 </script>

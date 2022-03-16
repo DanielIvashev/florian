@@ -13,12 +13,10 @@
 </template>
 <script>
 
-import {initMemberStack} from "@/utils";
-
 export default {
     name: 'Guests layout',
     mounted() {
-        initMemberStack()
+        this.$store.dispatch('initializeMemberStack')
     }
 }
 </script>

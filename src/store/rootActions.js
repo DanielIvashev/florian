@@ -65,5 +65,25 @@ export const rootActions = {
                     message: 'Coin gecko loading failed',
                 });
             })
+    },
+    initializeMemberStack({ commit, dispatch }) {
+        if (window.MemberStack) {
+            window.MemberStack.onReady.then((member) => {
+                console.log(member)
+                commit('SET_MEMBER_FROM_MEMBERSTACK', { member });
+                commit('bullbearSignal/INIT_FIELDS_VALUES', { member })
+            })
+        }
+    },
+    updateProfileInfo({ commit }, { fields }) {
+        if (!window.MemberStack || !fields || !fields.length) return;
+        MemberStack.onReady.then(function(member) {
+            member.updateProfile({
+                ...fields.reduce((acc, field) => {
+                    acc[field.name] = field.value;
+                    return acc;
+                }, {})
+            }, false)
+        })
     }
 };

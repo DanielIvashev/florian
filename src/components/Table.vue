@@ -1,7 +1,8 @@
 <template>
     <div class="container table">
-        <div v-if="type === 'big'" class="table__controls">
+        <div class="table__controls">
             <q-select
+                v-if="rowsPerPage"
                 transition-show="jump-up"
                 transition-hide="jump-up"
                 v-model="rowsPerPage.value"
@@ -15,11 +16,11 @@
                 style="min-width: 100px"
             />
             <q-select
+                v-if="timeRange"
                 transition-show="jump-up"
                 transition-hide="jump-up"
                 v-model="timeRange.value"
                 outlined
-                clearable
                 dense
                 options-dense
                 emit-value
@@ -32,6 +33,7 @@
                 </template>
             </q-select>
             <q-select
+                v-if="visibleColumns"
                 transition-show="jump-up"
                 transition-hide="jump-up"
                 v-model="visibleColumns"
@@ -60,41 +62,41 @@
         </div>
         <q-markup-table class="table__table" :class="{ 'table__table--small': type === 'small' }" ref="table">
             <thead>
-            <tr>
-                <template v-for="column in columns" :key="column.name">
-                    <th
-                        v-show="column.name in filteredColumns"
-                        class="table__th"
-                        :class="{ 'has-sort': column.sortable }"
-                        @click="sort({ column })"
-                    >
-                        {{ column.label }}
-                        <q-icon
-                            v-if="column.sortable"
-                            :name="`arrow_upward`"
-                            class="table__sort-icon"
-                            :class="{
-                            'sorted': currentSort.column === column.name,
-                            'sorted-ad': currentSort.column === column.name && currentSort.direction === 'ad',
-                            'sorted-da': currentSort.column === column.name && currentSort.direction === 'da',
-                        }"
-                        />
+                <tr>
+                    <template v-for="column in columns" :key="column.name">
+                        <th
+                            v-show="column.name in filteredColumns"
+                            class="table__th"
+                            :class="{ 'has-sort': column.sortable }"
+                            @click="sort({ column })"
+                        >
+                            {{ column.label }}
+                            <q-icon
+                                v-if="column.sortable"
+                                :name="`arrow_upward`"
+                                class="table__sort-icon"
+                                :class="{
+                                'sorted': currentSort.column === column.name,
+                                'sorted-ad': currentSort.column === column.name && currentSort.direction === 'ad',
+                                'sorted-da': currentSort.column === column.name && currentSort.direction === 'da',
+                            }"
+                            />
+                        </th>
+                    </template>
+                </tr>
+                <tr v-show="loading" class="q-table__progress table__progress">
+                    <th class="relative-position" colspan="8">
+                        <div class="q-linear-progress text-primary q-table__linear-progress" role="progressbar"
+                             aria-valuemin="0" aria-valuemax="1" style="--q-linear-progress-speed:2100ms;">
+                            <div
+                                class="q-linear-progress__track absolute-full q-linear-progress__track--with-transition q-linear-progress__track--light bg-transparent"
+                                style="transform: scale3d(1, 1, 1);"></div>
+                            <div
+                                class="q-linear-progress__model absolute-full q-linear-progress__model--with-transition q-linear-progress__model--indeterminate"
+                                style="transform: scale3d(1, 1, 1);"></div>
+                        </div>
                     </th>
-                </template>
-            </tr>
-            <tr v-show="loading" class="q-table__progress table__progress">
-                <th class="relative-position" colspan="8">
-                    <div class="q-linear-progress text-primary q-table__linear-progress" role="progressbar"
-                         aria-valuemin="0" aria-valuemax="1" style="--q-linear-progress-speed:2100ms;">
-                        <div
-                            class="q-linear-progress__track absolute-full q-linear-progress__track--with-transition q-linear-progress__track--light bg-transparent"
-                            style="transform: scale3d(1, 1, 1);"></div>
-                        <div
-                            class="q-linear-progress__model absolute-full q-linear-progress__model--with-transition q-linear-progress__model--indeterminate"
-                            style="transform: scale3d(1, 1, 1);"></div>
-                    </div>
-                </th>
-            </tr>
+                </tr>
             </thead>
             <TransitionGroup tag="tbody" name="list" class="table__t-body">
                 <tr v-for="row in rows" :key="row.id">
@@ -136,7 +138,7 @@
                 </tr>
             </TransitionGroup>
         </q-markup-table>
-        <div v-if="type === 'big'" class="table__pagination">
+        <div v-if="currentPage" class="table__pagination">
             <q-pagination
                 :model-value="currentPage"
                 @update:model-value="paginationHandler"
@@ -161,40 +163,32 @@ export default {
     name: 'Table',
     props: {
         coins: {
-            type: Array,
-            default: () => ([])
+            type: Array
         },
         columns: {
-            type: Array,
-            default: () => ([])
+            type: Array
         },
         loading: {
             type: Boolean,
             default: false
         },
         timeRange: {
-            type: Object,
-            default: () => ({})
+            type: Object
         },
         rowsPerPage: {
-            type: Object,
-            default: () => ({})
+            type: Object
         },
         likedRowIds: {
-            type: Array,
-            default: () => ({})
+            type: Array
         },
         currentPage: {
-            type: Number,
-            default: 1
+            type: Number
         },
         visibleColumns: {
-            type: Array,
-            default: () => ([])
+            type: Array
         },
         maxPage: {
-            type: Number,
-            default: 132
+            type: Number
         },
         type: {
             type: String,

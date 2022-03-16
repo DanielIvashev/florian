@@ -24,7 +24,6 @@ export const rootMutations = {
     SET_COINS_GECKO_SUCCESS(state, { coins }) {
         state.coinsGeckoLoading = false;
         state.coinsGeckoError = null;
-
         state.coinsGecko = markRaw(coins);
     },
     SET_COINS_GECKO_ERROR(state, {error}) {

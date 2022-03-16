@@ -12,18 +12,20 @@
 .list-move,
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.35s ease;
+
+    transition: all 0.35s ease;
 }
+
 .list-leave-active {
-  display: none;
+    display: none;
 }
 
 .list-enter-from,
 .list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+    opacity: 0;
+    transform: translateX(30px);
 }
 
 .list-leave-active {
-  position: absolute;
+    position: absolute;
 }

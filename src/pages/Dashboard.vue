@@ -13,19 +13,41 @@
                 >
                     <q-card>
                         <q-card-section>
-                            <table-small
+                            <custom-table
                                 :coins="getCoinsGeckoSmall"
                                 :columns="smallTable.columns"
                                 :loading="getCoinsGeckoLoading"
                                 :visible-columns="smallTable.visibleColumns"
-                                v-model:liked-row-ids="smallTable.likedRowIds"
+                                v-model:liked-row-ids="likedCoinsIds"
                                 type="small"
                             />
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
+                <transition name="router">
+                    <q-expansion-item
+                        v-if="likedCoins.length"
+                        v-model="isLikedCoinsTableOpen"
+                        popup
+                        icon="perm_identity"
+                        label="Liked coins Table"
+                    >
+                        <q-card>
+                            <q-card-section>
+                                <custom-table
+                                    :coins="likedCoins"
+                                    :columns="likedCoinsGeckoTable.columns"
+                                    :loading="getLikedCoinsGeckoLoading"
+                                    :visible-columns="likedCoinsGeckoTable.visibleColumns"
+                                    v-model:liked-row-ids="likedCoinsIds"
+                                    type="small"
+                                />
+                            </q-card-section>
+                        </q-card>
+                    </q-expansion-item>
+                </transition>
             </q-list>
-            <table-big
+            <custom-table
                 :coins="getCoinsGecko"
                 :columns="bigTable.columns"
                 :loading="getCoinsGeckoLoading"
@@ -33,30 +55,34 @@
                 :rows-per-page="bigTable.rowsPerPage"
                 :visible-columns="bigTable.visibleColumns"
                 v-model:current-page="bigTable.currentPage"
-                v-model:liked-row-ids="bigTable.likedRowIds"
+                v-model:liked-row-ids="likedCoinsIds"
                 :max-page="bigTablePagesCount"
                 type="big"
             />
+            <form ms-update="profile" style="display: none">
+                <input type="text" ms-field="liked-coins" hidden aria-hidden="true" ref="likedCoinsInput">
+            </form>
         </div>
     </div>
 </template>
 
 <script>
 import Table from "@/components/Table.vue";
-import { markRaw } from "vue";
+import {markRaw} from "vue";
+import {debounce} from 'quasar'
 
 const ALL_COINS_COUNT = 13100;
 
 export default {
     name: 'Dashboard',
     components: {
-        TableBig: Table,
-        TableSmall: Table
+        CustomTable: Table,
     },
     data() {
         return {
             isSmallTableOpen: false,
-            bigTable: {
+            isLikedCoinsTableOpen: false,
+            likedCoinsGeckoTable: {
                 columns: markRaw([
                     {
                         name: 'image',
@@ -72,19 +98,20 @@ export default {
                         }
                     },
                     {
+                        name: 'market_cap',
+                        label: 'Market Cap',
+                        format: (val) => val + '$',
+                        field: (row) => row.market_cap,
+                        sortable: {
+                            handler: (a, b) => a.market_cap - b.market_cap,
+                        }
+                    },
+                    {
                         name: 'current_price',
                         label: 'Current Price',
                         format: (val) => val + '$',
                         sortable: {
                             handler: (a, b) => a.current_price - b.current_price,
-                        }
-                    },
-                    {
-                        name: 'symbol',
-                        label: 'Symbol',
-                        format: (val) => val,
-                        sortable: {
-                            handler: (a, b) => a.symbol - b.symbol,
                         }
                     },
                     {
@@ -96,12 +123,35 @@ export default {
                         }
                     },
                     {
-                        name: 'market_cap',
-                        label: 'Market Cap',
-                        format: (val) => val + '$',
-                        field: (row) => row.market_cap,
+                        name: 'mentions',
+                        label: 'Mentions',
+                        format: (val) => '',
                         sortable: {
-                            handler: (a, b) => a.market_cap - b.market_cap,
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'sentiment',
+                        label: 'Sentiment',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'diffusion',
+                        label: 'Diffusion',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'reach',
+                        label: 'Reach',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
                         }
                     },
                     {
@@ -125,7 +175,101 @@ export default {
                         required: true
                     },
                 ]),
-                likedRowIds: [],
+                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
+            },
+            bigTable: {
+                columns: markRaw([
+                    {
+                        name: 'image',
+                        label: 'Logo',
+                        required: true
+                    },
+                    {
+                        name: 'name',
+                        label: 'Name',
+                        format: (val) => val,
+                        sortable: {
+                            handler: (a, b) => a.name.localeCompare(b.name),
+                        }
+                    },
+                    {
+                        name: 'market_cap',
+                        label: 'Market Cap',
+                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
+                        field: (row) => row.market_cap,
+                        sortable: {
+                            handler: (a, b) => a.market_cap - b.market_cap,
+                        }
+                    },
+                    {
+                        name: 'current_price',
+                        label: 'Current Price',
+                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
+                        sortable: {
+                            handler: (a, b) => a.current_price - b.current_price,
+                        }
+                    },
+                    {
+                        name: 'price_change_percentage_24h',
+                        label: 'Price Change (24h)',
+                        format: (val) => val + '%',
+                        sortable: {
+                            handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
+                        }
+                    },
+                    {
+                        name: 'mentions',
+                        label: 'Mentions',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'sentiment',
+                        label: 'Sentiment',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'diffusion',
+                        label: 'Diffusion',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'reach',
+                        label: 'Reach',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'likes',
+                        label: 'Like',
+                        format: (val) => val,
+                        field: (row) => '',
+                        sortable: {
+                            handler: (a, b) => {
+                                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
+                                    return 0;
+                                }
+                                const hasLike = (this.likedRowIds || []).includes(a.id);
+                                return hasLike ? 1 : -1
+                            },
+                        }
+                    },
+                    {
+                        name: 'pageLink',
+                        label: '',
+                        required: true
+                    },
+                ]),
                 currentPage: 1,
                 rowsPerPage: {
                     value: 25,
@@ -185,10 +329,9 @@ export default {
                         },
                     ])
                 },
-                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'symbol'],
+                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
             },
             smallTable: {
-                likedRowIds: [],
                 columns: markRaw([
                     {
                         name: 'image',
@@ -204,35 +347,60 @@ export default {
                         }
                     },
                     {
+                        name: 'market_cap',
+                        label: 'Market Cap',
+                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
+                        field: (row) => row.market_cap,
+                        sortable: {
+                            handler: (a, b) => a.market_cap - b.market_cap,
+                        }
+                    },
+                    {
                         name: 'current_price',
                         label: 'Current Price',
-                        format: (val) => val + '$',
+                        format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
                         sortable: {
                             handler: (a, b) => a.current_price - b.current_price,
                         }
                     },
                     {
-                        name: 'symbol',
-                        label: 'Symbol',
-                        format: (val) => val,
-                        sortable: {
-                            handler: (a, b) => a.symbol - b.symbol,
-                        }
-                    },
-                    {
                         name: 'price_change_percentage_24h',
-                        label: 'Symbol',
+                        label: 'Price Change (24h)',
                         format: (val) => val + '%',
                         sortable: {
                             handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
                         }
                     },
                     {
-                        name: 'market_cap',
-                        label: 'Market Cap',
-                        format: (val) => val + '$',
+                        name: 'mentions',
+                        label: 'Mentions',
+                        format: (val) => '',
                         sortable: {
-                            handler: (a, b) => a.market_cap - b.market_cap,
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'sentiment',
+                        label: 'Sentiment',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'diffusion',
+                        label: 'Diffusion',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
+                        }
+                    },
+                    {
+                        name: 'reach',
+                        label: 'Reach',
+                        format: (val) => '',
+                        sortable: {
+                            handler: (a, b) => 0,
                         }
                     },
                     {
@@ -256,11 +424,16 @@ export default {
                         required: true
                     },
                 ]),
-                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'symbol'],
-            }
+                visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
+            },
+            likedCoins: [],
+            likedCoinsIds: []
         }
     },
     computed: {
+        getMemberFromMemberstack() {
+            return this.$store.getters['getMemberFromMemberstack'] || {};
+        },
         getCoinsGecko() {
             return this.$store.getters['getCoinsGecko'] || [];
         },
@@ -275,7 +448,10 @@ export default {
         },
         bigTablePagesCount() {
             return Math.floor(ALL_COINS_COUNT / this.bigTable.rowsPerPage.value);
-        }
+        },
+        getLikedCoinsGeckoLoading() {
+            return false;
+        },
     },
     watch: {
         'bigTable.timeRange.value'(val) {
@@ -287,10 +463,38 @@ export default {
         },
         'bigTable.currentPage'(val) {
             this.loadCoinsMarket();
+        },
+        getCoinsGecko (val) {
+            this.setLikedCoinsFromBackend()
+        },
+        likedCoinsIds (val, oldVal) {
+            const findDifferentElements = val.filter(e => !~oldVal.indexOf(e)).concat(oldVal.filter(e => !~val.indexOf(e)))
+            const uniqueIds = [...new Set(findDifferentElements)];
+            uniqueIds.forEach(id => {
+                const savedCoinsFromBackend = JSON.parse(this.$refs.likedCoinsInput.value || '[]');
+                const coinDataById = [...this.getCoinsGecko, ...savedCoinsFromBackend].find(coin => coin.id === id);
+                if (coinDataById) {
+                    if (val.includes(id)) {
+                        const copyOfLikedCoins = [...this.likedCoins];
+                        copyOfLikedCoins.unshift(coinDataById)
+                        this.likedCoins = copyOfLikedCoins
+                    } else {
+                        this.likedCoins = this.likedCoins.filter(coin => coin.id !== id)
+                    }
+                }
+            })
+        },
+        likedCoins (val) {
+            const reversedSaveVersion = [...val].reverse()
+            this.updateLikedRowsInMemberstack(reversedSaveVersion);
         }
     },
     created() {
+        this.updateLikedRowsInMemberstack = debounce(this.updateLikedRowsInMemberstack, 1000)
         this.loadCoinsMarket();
+    },
+    mounted () {
+        window.MemberStack.reload();
     },
     methods: {
         loadCoinsMarket() {
@@ -302,6 +506,15 @@ export default {
                     price_change_percentage: this.bigTable.timeRange.value
                 }
             })
+        },
+        updateLikedRowsInMemberstack(val) {
+            const likedCoinsToString = JSON.stringify(val);
+            this.$store.dispatch('updateProfileInfo', { fields: [{value: likedCoinsToString, name: 'liked-coins'}] })
+        },
+        setLikedCoinsFromBackend () {
+            if (this.getCoinsGecko.length) {
+                this.likedCoinsIds = JSON.parse(this.$refs.likedCoinsInput.value || '[]').map(coin => coin.id)
+            }
         }
     }
 };

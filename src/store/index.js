@@ -5,6 +5,7 @@ import { rootMutations } from './rootMutations';
 import { auth } from './modules/auth';
 import { navigation } from './modules/navigation';
 import { bullbearSignal } from './modules/bullbearSignal';
+import { dashboard } from "./modules/dashboard";
 import { themeTogglerMiddleware } from './middlewares';
 
 export const store = createStore({
@@ -12,6 +13,7 @@ export const store = createStore({
         auth,
         navigation,
         bullbearSignal,
+        dashboard
     },
     state() {
         return {

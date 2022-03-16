@@ -25,5 +25,8 @@ export const rootGetters = {
     },
     getCoinGeckoLoading(state) {
         return state.coinGeckoLoading;
+    },
+    getMemberFromMemberstack(state) {
+        return state.memberFromMemberStack || {};
     }
 };

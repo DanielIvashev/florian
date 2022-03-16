@@ -72,45 +72,65 @@ export default {
                     name: 'name',
                     label: 'Name',
                     format: (val) => val,
-                    field: (row) => row.name,
                     sortable: {
                         handler: (a, b) => a.name.localeCompare(b.name),
                     }
                 },
                 {
-                    name: 'current_price',
-                    label: 'Current Price',
-                    format: (val) => val,
-                    field: (row) => row.current_price,
+                    name: 'market_cap',
+                    label: 'Market Cap',
+                    format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
+                    field: (row) => row.market_cap,
                     sortable: {
-                        handler: (a, b) => a.current_price - b.current_price,
+                        handler: (a, b) => a.market_cap - b.market_cap,
                     }
                 },
                 {
-                    name: 'symbol',
-                    label: 'Symbol',
-                    format: (val) => val,
-                    field: (row) => row.symbol,
+                    name: 'current_price',
+                    label: 'Current Price',
+                    format: (val) => '$' + val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"),
                     sortable: {
-                        handler: (a, b) => a.symbol - b.symbol,
+                        handler: (a, b) => a.current_price - b.current_price,
                     }
                 },
                 {
                     name: 'price_change_percentage_24h',
                     label: 'Price Change (24h)',
                     format: (val) => val + '%',
-                    field: (row) => row.price_change_percentage_24h,
                     sortable: {
                         handler: (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h,
                     }
                 },
                 {
-                    name: 'market_cap',
-                    label: 'Market Cap',
-                    format: (val) => val + '%',
-                    field: (row) => row.market_cap,
+                    name: 'mentions',
+                    label: 'Mentions',
+                    format: (val) => '',
                     sortable: {
-                        handler: (a, b) => a.market_cap - b.market_cap,
+                        handler: (a, b) => 0,
+                    }
+                },
+                {
+                    name: 'sentiment',
+                    label: 'Sentiment',
+                    format: (val) => '',
+                    sortable: {
+                        handler: (a, b) => 0,
+                    }
+                },
+                {
+                    name: 'diffusion',
+                    label: 'Diffusion',
+                    format: (val) => '',
+                    sortable: {
+                        handler: (a, b) => 0,
+                    }
+                },
+                {
+                    name: 'reach',
+                    label: 'Reach',
+                    format: (val) => '',
+                    sortable: {
+                        handler: (a, b) => 0,
                     }
                 },
                 {
@@ -134,7 +154,7 @@ export default {
                     required: true
                 },
             ]),
-            visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'symbol'],
+            visibleColumns: ['current_price', 'name', 'price_change_percentage_24h', 'likes', 'market_cap', 'mentions', 'sentiment', 'diffusion', 'reach'],
             likedRowIds: [],
             currentPage: 1,
             rowsPerPage: {

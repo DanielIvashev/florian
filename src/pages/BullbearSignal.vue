@@ -1,6 +1,6 @@
 <template>
     <div class="bullbear-signal">
-        <q-btn label="Back to Dashboard" type="button" color="primary" @click="$router.push({ name: 'Dashboard' })" />
+        <q-btn label="Back to Dashboard" type="button" color="primary" @click="$router.push({ name: 'Dashboard' })"/>
         <q-card class="bullbear-signal__form-card">
             <q-card-section>
                 <div class="bullbear-signal__logo-wrapper">
@@ -63,9 +63,9 @@
 </template>
 
 <script>
-import { createHelpers } from 'vuex-map-fields';
+import {createHelpers} from 'vuex-map-fields';
 
-const { mapFields } = createHelpers({
+const {mapFields} = createHelpers({
     getterType: 'bullbearSignal/getField',
     mutationType: 'bullbearSignal/updateField',
 });
@@ -73,15 +73,18 @@ const { mapFields } = createHelpers({
 export default {
     name: 'BullbearSignal',
     computed: {
-        ...mapFields(['fields'])
+        ...mapFields(['fields']),
     },
     methods: {
-        updateFieldValue ({ value, name }) {
-            this.$store.commit('bullbearSignal/UPDATE_FIELD_VALUE', { value, name })
+        updateFieldValue({value, name}) {
+            this.$store.commit('bullbearSignal/UPDATE_FIELD_VALUE', {value, name})
         }
     },
-    mounted () {
-
+    watch: {},
+    mounted() {
+        if (window.MemberStack) {
+            window.MemberStack.reload();
+        }
     }
 }
 </script>

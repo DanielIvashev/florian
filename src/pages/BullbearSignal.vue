@@ -69,25 +69,18 @@ export default {
         getFields () {
             return this.$store.getters['bullbearSignal/getFields']
         },
-        getMemberFromMemberStack () {
-            return this.$store.getters['getMemberFromMemberstack'] || {};
-        }
     },
     methods: {
         updateFieldValue({value, name}) {
             this.$store.commit('bullbearSignal/UPDATE_FIELD_VALUE', {value, name})
         }
     },
-    watch: {
-        getMemberFromMemberStack (val, oldVal) {
-            if (Object.keys(val) !== Object.keys(oldVal)) {
-                this.$store.commit('bullbearSignal/INIT_FIELDS_VALUES', { member: val })
-            }
+    mounted () {
+        if (window.MemberStack) {
+            window.MemberStack.reload();
         }
     },
-    mounted() {
-        window.MemberStack.reload();
-    }
+    watch: {},
 }
 </script>
 

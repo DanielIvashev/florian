@@ -1,1 +1,0 @@
-import{x as o,I as e}from"./quasar.9bea6539.js";import{_ as t}from"./index.964fddf4.js";const n={name:"NotFound"};function r(a,c,s,p,_,d){return o(),e("div",null," not found page ")}var m=t(n,[["render",r]]);export{m as default};

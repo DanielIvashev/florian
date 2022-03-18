@@ -14,22 +14,15 @@
         left: 0;
     }
 
-    &__graphic-wrapper {
-        position: relative;
-        min-height: 450px;
+    &__chart-wrapper {
         margin-bottom: 20px;
     }
-    &__graphic-wrapper:has(> div) {
-        min-height: auto;
+    &__chart-date-range {
+        margin-bottom: 15px;
     }
-    &__graphic-skeleton {
-        height: 100%;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        left: 0;
-    }
+
     &__title-wrapper {
+        min-height: 100px;
         display: flex;
         justify-content: center;
         align-items: center;

@@ -33,6 +33,9 @@ export default {
     mounted () {
         this.$store.dispatch('initialize');
     },
+    watch: {
+    },
     methods: {}
 };
+
 </script>

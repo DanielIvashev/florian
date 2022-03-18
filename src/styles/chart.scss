@@ -1,0 +1,17 @@
+.chart {
+    &__graphic-wrapper {
+        position: relative;
+        min-height: 450px;
+        margin-bottom: 20px;
+    }
+    &__graphic-wrapper:has(> div) {
+        min-height: auto;
+    }
+    &__skeleton {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0;
+    }
+}

@@ -74,7 +74,12 @@ export default {
     name: 'Login',
     computed: {
         ...mapFields(['loginForm.email', 'loginForm.password']),
-    }
+    },
+    mounted () {
+        if (window.MemberStack) {
+            window.MemberStack.reload();
+        }
+    },
 }
 </script>
 <style lang='scss' scoped>

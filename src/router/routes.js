@@ -15,8 +15,8 @@ export const routes = [
         name: 'Login',
         component: Login,
         meta: {
-          layout: 'guests-layout',
-          middleware: [guest],
+            layout: 'guests-layout',
+            middleware: [guest],
         },
     },
     {
@@ -24,7 +24,7 @@ export const routes = [
         name: 'SignUp',
         component: SignUp,
         meta: {
-            layout: 'guests-layout'
+            layout: 'guests-layout',
         },
     },
     {
@@ -33,7 +33,7 @@ export const routes = [
         name: 'Dashboard',
         component: Dashboard,
         meta: {
-          middleware: [auth]
+            middleware: [auth],
         }
     },
     {
@@ -49,7 +49,7 @@ export const routes = [
         name: 'BullbearSignal',
         component: BullbearSignal,
         meta: {
-            middleware: [auth]
+            middleware: [auth],
         }
     },
     {

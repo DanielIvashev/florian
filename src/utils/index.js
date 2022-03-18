@@ -1,5 +1,4 @@
 import { Notify } from 'quasar';
-import { store } from "@/store";
 
 const notificationPresets = {
   error: {
@@ -26,21 +25,4 @@ export function getCookie (name) {
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-export function get(object, path, defaultValue) {
-    let result = object == null ? undefined : baseGet(object, path);
-    return result === undefined ? defaultValue : result;
-}
-
-export function getPropByPath (object, path) {
-    const _path = Array.isArray(path)
-        ? path
-        : path.split('.');
-    if (object && _path.length) return getPropByPath(object[_path.shift()], _path);
-    return object;
-}
-
-export function advancedTypeof (field) {
-    return Object.prototype.toString.call(field)
 }

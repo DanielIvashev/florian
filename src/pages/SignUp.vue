@@ -74,7 +74,12 @@ export default {
         ...mapFields(['signUpForm.email', 'signUpForm.password', 'signUpForm.name'])
     },
     methods: {
-    }
+    },
+    mounted () {
+        if (window.MemberStack) {
+            window.MemberStack.reload();
+        }
+    },
 }
 </script>
 <style lang='scss' scoped>

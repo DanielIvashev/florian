@@ -31,7 +31,7 @@ export const rootActions = {
     loadCoinsMarket({commit, dispatch}, payload = {}) {
         commit('SET_COINS_GECKO_LOADING');
         return coinGeckoRepository
-            .getCoinsMarkets({params: payload.params})
+            .getCoinsMarkets({ params: payload.params })
             .then(({data, status}) => {
                 if (status !== 200 || !data || !data.length) {
                     throw new Error();
@@ -81,9 +81,7 @@ export const rootActions = {
     loadCoinBullbearInfo({ commit, dispatch }) {
         commit('SET_COINS_GECKO_LOADING');
         return bullbearApiRepository
-            .getCoinInfo({ data: {"ticker_bb": "alpha",
-                    "start_date": "2022-02-01 15:00",
-                    "end_date": "2022-02-01 21:00"} })
+            .getCoinInfo()
             .then(({data, status}) => {
                 if (status !== 200 || !data || !data.length) {
                     throw new Error();

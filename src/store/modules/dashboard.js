@@ -1,5 +1,4 @@
 import {markRaw} from "vue";
-import {advancedTypeof, getPropByPath} from "@/utils";
 
 export const dashboard = {
     namespaced: true,
@@ -25,7 +24,7 @@ export const dashboard = {
                     {
                         name: 'market_cap',
                         label: 'Market Cap',
-                        format: (val) => val + '$',
+                        format: (val) => ('$' + val).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
                         field: (row) => row.market_cap,
                         sortable: {
                             handler: (a, b) => a.market_cap - b.market_cap,
@@ -34,7 +33,7 @@ export const dashboard = {
                     {
                         name: 'current_price',
                         label: 'Current Price',
-                        format: (val) => val + '$',
+                        format: (val) => ('$' + val).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
                         sortable: {
                             handler: (a, b) => a.current_price - b.current_price,
                         }
@@ -84,15 +83,6 @@ export const dashboard = {
                         label: 'Like',
                         format: (val) => val,
                         field: (row) => '',
-                        sortable: {
-                            handler: (a, b) => {
-                                if (!this.bigTable.likedRowIds || !this.bigTable.likedRowIds.length) {
-                                    return 0;
-                                }
-                                const hasLike = (this.likedRowIds || []).includes(a.id);
-                                return hasLike ? 1 : -1
-                            },
-                        }
                     },
                     {
                         name: 'pageLink',

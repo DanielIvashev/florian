@@ -9,7 +9,7 @@
                     v-model="isSmallTableOpen"
                     popup
                     icon="perm_identity"
-                    label="Small Table"
+                    label="Personality"
                 >
                     <q-card>
                         <q-card-section>
@@ -31,8 +31,8 @@
                         v-if="getLikedCoins.length"
                         v-model="isLikedCoinsTableOpen"
                         popup
-                        icon="perm_identity"
-                        label="Liked coins Table"
+                        icon="favorite_border"
+                        label="Liked coins"
                     >
                         <q-card>
                             <q-card-section>
@@ -139,8 +139,9 @@ export default {
         this.loadCoinsMarket();
     },
     mounted () {
-        window.MemberStack.reload();
-        this.$store.dispatch('loadCoinBullbearInfo')
+        if (window.MemberStack) {
+            window.MemberStack.reload();
+        }
     },
     methods: {
         twoWayBindingsHandler ({ event, name, table }) {
